@@ -9,10 +9,17 @@ plugins {
   id("org.jetbrains.intellij.platform")
   kotlin("jvm") version "2.0.21"
   id("com.diffplug.spotless") version "6.25.0"
+  idea
 }
 
 group = "in.sungb.intellij.playground"
 version = "0.0-preview"
+
+idea {
+  module {
+    excludeDirs = excludeDirs + setOf(file(".kotlin"))
+  }
+}
 
 kotlin {
   jvmToolchain {
