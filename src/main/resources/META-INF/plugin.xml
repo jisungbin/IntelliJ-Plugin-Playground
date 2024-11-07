@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright 2024 Ji Sungbin
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+<idea-plugin>
+  <id>in.sungb.intellij.playground.IntelliJ-Plugin-Playground</id>
+  <name>Playground</name>
+  <vendor email="ji@sungb.in" url="https://sungb.in">Ji Sungbin</vendor>
+
+  <!--suppress PluginXmlValidity -->
+  <description>IntelliJ IDEA Plugin Playground</description>
+
+  <depends>com.intellij.modules.platform</depends>
+  <extensions defaultExtensionNs="com.intellij">
+
+  </extensions>
+</idea-plugin>
