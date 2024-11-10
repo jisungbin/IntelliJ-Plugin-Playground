@@ -3,6 +3,7 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.diffplug.gradle.spotless.BaseKotlinExtension
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 plugins {
   id("java")
@@ -22,6 +23,7 @@ idea {
 }
 
 kotlin {
+  explicitApi()
   jvmToolchain {
     languageVersion = JavaLanguageVersion.of(17)
     vendor = JvmVendorSpec.JETBRAINS
@@ -34,6 +36,7 @@ tasks.compileKotlin.configure {
       "kotlin.OptIn",
       "kotlin.RequiresOptIn",
       "kotlin.contracts.ExperimentalContracts",
+      "org.jetbrains.kotlin.utils.addToStdlib.UnsafeCastFunction",
     )
   }
 }
@@ -96,5 +99,16 @@ dependencies {
     intellijIdeaCommunity("2023.3")
     bundledPlugin("org.jetbrains.kotlin")
     instrumentationTools()
+
+
+    testFramework(TestFrameworkType.Platform)
+    testFramework(TestFrameworkType.Plugin.Java)
+    testFramework(TestFrameworkType.JUnit5)
   }
+
+  testImplementation(kotlin("test-junit5"))
+  testImplementation(kotlin("reflect")) // Used by assertk
+  testImplementation("com.willowtreeapps.assertk:assertk:0.28.1")
+
+  testImplementation("junit:junit:4.13.2") { because("IJPL-159134") }
 }

@@ -3,9 +3,9 @@
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 <idea-plugin>
-  <id>in.sungb.intellij.playground.IntelliJ-Plugin-Playground</id>
+  <id>land.sungbin.intellij.playground.IntelliJ-Plugin-Playground</id>
   <name>Playground</name>
-  <vendor email="ji@sungb.in" url="https://sungb.in">Ji Sungbin</vendor>
+  <vendor email="ji@sungb.land" url="https://sungb.in">Ji Sungbin</vendor>
 
   <!--suppress PluginXmlValidity -->
   <description>IntelliJ IDEA Plugin Playground</description>
