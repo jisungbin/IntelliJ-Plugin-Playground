@@ -100,7 +100,6 @@ dependencies {
     bundledPlugin("org.jetbrains.kotlin")
     instrumentationTools()
 
-
     testFramework(TestFrameworkType.Platform)
     testFramework(TestFrameworkType.Plugin.Java)
     testFramework(TestFrameworkType.JUnit5)
