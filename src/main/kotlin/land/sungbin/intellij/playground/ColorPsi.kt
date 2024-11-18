@@ -7,15 +7,15 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.util.parentOfType
 import com.intellij.psi.util.parentsOfType
 import java.util.Collections
-import kotlin.collections.plusAssign
 import org.jetbrains.kotlin.analysis.utils.collections.mapToSet
 import org.jetbrains.kotlin.idea.KotlinLanguage
 import org.jetbrains.kotlin.idea.intentions.loopToCallChain.isSimpleName
-import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.KtCallExpression
 import org.jetbrains.kotlin.psi.KtConstantExpression
 import org.jetbrains.kotlin.psi.KtDotQualifiedExpression
 import org.jetbrains.kotlin.psi.KtElement
+import org.jetbrains.kotlin.psi.KtImportList
 import org.jetbrains.kotlin.psi.KtObjectDeclaration
 import org.jetbrains.kotlin.psi.KtProperty
 import org.jetbrains.kotlin.psi.KtSimpleNameExpression
@@ -55,8 +55,15 @@ public class ColorPsi {
     }
 
   private class ColorCollector : KtVisitorVoidWithParameter<MutableCollection<NamedColor>>() {
+    private val imports = mutableListOf<FqName>()
+
     override fun visitKtElementVoid(element: KtElement, data: MutableCollection<NamedColor>) {
       element.acceptChildren(this, data)
+    }
+
+    override fun visitImportListVoid(importList: KtImportList, data: MutableCollection<NamedColor>) {
+      imports += importList.imports.mapNotNull { it.importedFqName }
+      super.visitImportListVoid(importList, data)
     }
 
     override fun visitPropertyVoid(property: KtProperty, data: MutableCollection<NamedColor>) {
@@ -66,8 +73,12 @@ public class ColorPsi {
       val initializeExpression = property.initializer.safeAs<KtCallExpression>() ?: return
       val initializeCallee = initializeExpression.calleeExpression
 
-      // TODO FQN으로 Color 타입 검사. 근데 PSI로 이게 가능?
-      if (initializeCallee?.isSimpleName(COLOR_N) != true) return
+      // TODO import에서 읽어오는 방식 대신에 직접 FQN 검사. 근데 PSI로 이게 가능?
+      if (
+        initializeCallee?.isSimpleName(COMPOSE_COLOR_FQN.shortName()) != true ||
+        COMPOSE_COLOR_FQN !in findColorImports()
+      )
+        return
 
       @Suppress("UsePropertyAccessSyntax") // -> KT-67467
       val hexCode = initializeExpression.valueArguments
@@ -78,16 +89,21 @@ public class ColorPsi {
       data += NamedColor(containerName, colorName, hexCode)
     }
 
-    private companion object {
-      private val COLOR_N = Name.identifier("Color")
-    }
+    private fun findColorImports(): List<FqName> =
+      imports.filter { it.shortName() == COMPOSE_COLOR_FQN.shortName() }
   }
 
   private class SemanticColorCollector(private val namedColors: List<NamedColor>) : KtVisitorVoidWithParameter<MutableCollection<SemanticColor>>() {
+    private val imports = mutableListOf<FqName>()
     private val availableContainerNames = namedColors.mapToSet(NamedColor::containerName)
 
     override fun visitKtElementVoid(element: KtElement, data: MutableCollection<SemanticColor>) {
       element.acceptChildren(this, data)
+    }
+
+    override fun visitImportListVoid(importList: KtImportList, data: MutableCollection<SemanticColor>) {
+      imports += importList.imports.mapNotNull { it.importedFqName }
+      super.visitImportListVoid(importList, data)
     }
 
     override fun visitPropertyVoid(property: KtProperty, data: MutableCollection<SemanticColor>) {
@@ -147,7 +163,13 @@ public class ColorPsi {
     ) {
       val initializeExpression = expression.safeAs<KtCallExpression>() ?: return
       val initializeCallee = expression.safeAs<KtCallExpression>()?.calleeExpression
-      if (initializeCallee?.isSimpleName(COLOR_N) != true) return
+
+      // TODO import에서 읽어오는 방식 대신에 직접 FQN 검사. 근데 PSI로 이게 가능?
+      if (
+        initializeCallee?.isSimpleName(COMPOSE_COLOR_FQN.shortName()) != true ||
+        COMPOSE_COLOR_FQN !in findColorImports()
+      )
+        return
 
       @Suppress("UsePropertyAccessSyntax")
       val hexCode = initializeExpression.valueArguments
@@ -158,8 +180,7 @@ public class ColorPsi {
       destination += SemanticColor(groupNames, colorName, colorAlias = null, hexCode)
     }
 
-    private companion object {
-      private val COLOR_N = Name.identifier("Color")
-    }
+    private fun findColorImports(): List<FqName> =
+      imports.filter { it.shortName() == COMPOSE_COLOR_FQN.shortName() }
   }
 }

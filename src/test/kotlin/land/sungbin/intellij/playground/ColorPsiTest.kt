@@ -10,9 +10,9 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlinx.coroutines.runBlocking
-import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlin.idea.KotlinLanguage
 
+// TODO import 관여 있는 테스트 로직 작성
 class ColorPsiTest : BasePlatformTestCase() {
   @BeforeTest fun setup() {
     setUp()
@@ -67,8 +67,9 @@ class ColorPsiTest : BasePlatformTestCase() {
   }
 
   private companion object {
-    @Language("kotlin")
     private val MY_COLORS_KT = """
+import androidx.compose.ui.graphics.Color
+
 object MyColors {
   val One = Color(0xFF111111)
   val Two = Color(0xFF222222)
@@ -78,8 +79,9 @@ object MyColors {
 }
     """.trimIndent()
 
-    @Language("kotlin")
     private val MY_COLOR_GROUPS_KT = """
+import androidx.compose.ui.graphics.Color
+      
 object MyColorGroups {
   object First {
     val SemanticOne inline get() = MyColors.One
