@@ -10,6 +10,9 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlinx.coroutines.runBlocking
+import land.sungbin.intellij.playground.psi.ColorPsi
+import land.sungbin.intellij.playground.psi.NamedColor
+import land.sungbin.intellij.playground.psi.SemanticColor
 import org.jetbrains.kotlin.idea.KotlinLanguage
 
 // TODO import 관여 있는 테스트 로직 작성
@@ -33,7 +36,7 @@ class ColorPsiTest : BasePlatformTestCase() {
       )
     }
 
-    assertThat(ColorPsi().parseColors(file)).containsExactly(
+    assertThat(readAction { ColorPsi().parseColors(file) }).containsExactly(
       NamedColor("MyColors", "One", "0xFF111111"),
       NamedColor("MyColors", "Two", "0xFF222222"),
       NamedColor("MyColors", "Three", "0xFF333333"),
@@ -58,7 +61,7 @@ class ColorPsiTest : BasePlatformTestCase() {
       NamedColor("MyColors", "Five", "0xFF555555"),
     )
 
-    assertThat(ColorPsi().parseSemanticColors(file, namedColors)).containsExactly(
+    assertThat(readAction { ColorPsi().parseSemanticColors(file, namedColors) }).containsExactly(
       SemanticColor(listOf("MyColorGroups", "First"), "SemanticOne", "One", "0xFF111111"),
       SemanticColor(listOf("MyColorGroups", "First"), "SemanticTwo", "Two", "0xFF222222"),
       SemanticColor(listOf("MyColorGroups", "Second"), "SemanticThree", colorAlias = null, "0xFF333333"),

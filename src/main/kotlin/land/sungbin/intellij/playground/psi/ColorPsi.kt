@@ -1,12 +1,13 @@
 // Copyright 2024 Ji Sungbin
 // SPDX-License-Identifier: Apache-2.0
-package land.sungbin.intellij.playground
+package land.sungbin.intellij.playground.psi
 
-import com.intellij.openapi.application.readAction
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.parentOfType
 import com.intellij.psi.util.parentsOfType
+import com.intellij.util.concurrency.annotations.RequiresReadLock
 import java.util.Collections
+import land.sungbin.intellij.playground.COMPOSE_COLOR_FQN
 import org.jetbrains.kotlin.analysis.utils.collections.mapToSet
 import org.jetbrains.kotlin.idea.KotlinLanguage
 import org.jetbrains.kotlin.idea.intentions.loopToCallChain.isSimpleName
@@ -42,17 +43,15 @@ public class ColorPsi {
   private fun isValidForColorParsing(file: PsiFile): Boolean =
     !file.isDirectory && file.isValid && file.language == KotlinLanguage.INSTANCE
 
-  public suspend fun parseColors(file: PsiFile): List<NamedColor> =
-    readAction {
-      if (!isValidForColorParsing(file)) return@readAction emptyList()
-      ArrayList<NamedColor>().apply { ColorCollector().visitKtElementVoid(file.cast(), this) }
-    }
+  @RequiresReadLock public fun parseColors(file: PsiFile): List<NamedColor> {
+    if (!isValidForColorParsing(file)) return emptyList()
+    return ArrayList<NamedColor>().apply { ColorCollector().visitKtElementVoid(file.cast(), this) }
+  }
 
-  public suspend fun parseSemanticColors(file: PsiFile, colorNames: List<NamedColor>): List<SemanticColor> =
-    readAction {
-      if (!isValidForColorParsing(file)) return@readAction emptyList()
-      ArrayList<SemanticColor>().apply { SemanticColorCollector(colorNames).visitKtElementVoid(file.cast(), this) }
-    }
+  @RequiresReadLock public fun parseSemanticColors(file: PsiFile, colorNames: List<NamedColor>): List<SemanticColor> {
+    if (!isValidForColorParsing(file)) return emptyList()
+    return ArrayList<SemanticColor>().apply { SemanticColorCollector(colorNames).visitKtElementVoid(file.cast(), this) }
+  }
 
   private class ColorCollector : KtVisitorVoidWithParameter<MutableCollection<NamedColor>>() {
     private val imports = mutableListOf<FqName>()
