@@ -18,6 +18,10 @@ class ColorPsiTest : BasePlatformTestCase() {
     setUp()
   }
 
+  @AfterTest fun cleanup() {
+    tearDown()
+  }
+
   // https://github.com/JetBrains/intellij-community/blob/690badb9ccf4e668ac8f1e70a43d061e9894f4fa/platform/platform-tests/testSrc/com/intellij/workspaceModel/core/fileIndex/CustomKindFileSetTest.kt#L50-L51
   // runTest가 없나? runBlocking으로 suspend @Test를 진행하고 있다.
   @Test fun parseColors() = runBlocking {
@@ -60,10 +64,6 @@ class ColorPsiTest : BasePlatformTestCase() {
       SemanticColor(listOf("MyColorGroups", "Second"), "SemanticThree", colorAlias = null, "0xFF333333"),
       SemanticColor(listOf("MyColorGroups", "Second"), "SemanticFour", colorAlias = null, "0xFF444444"),
     )
-  }
-
-  @AfterTest fun cleanup() {
-    tearDown()
   }
 
   private companion object {
