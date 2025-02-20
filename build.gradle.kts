@@ -16,12 +16,6 @@ plugins {
 group = "in.sungb.intellij.playground"
 version = "0.0-preview"
 
-idea {
-  module {
-    excludeDirs = excludeDirs + setOf(file(".kotlin"))
-  }
-}
-
 kotlin {
   explicitApi()
   jvmToolchain {
@@ -96,9 +90,9 @@ spotless {
 
 dependencies {
   intellijPlatform {
-    intellijIdeaCommunity("2023.3")
-    bundledPlugin("org.jetbrains.kotlin")
-    instrumentationTools()
+    // intellijIdeaCommunity("2023.3")
+    create("IC", "2024.2.1")
+    bundledPlugins("com.intellij.java", "org.jetbrains.kotlin")
 
     testFramework(TestFrameworkType.Platform)
     testFramework(TestFrameworkType.Plugin.Java)
