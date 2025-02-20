@@ -48,7 +48,7 @@ tasks.test.configure {
 
 spotless {
   fun BaseKotlinExtension.useKtlint() {
-    ktlint("1.4.1").editorConfigOverride(
+    ktlint("1.5.0").editorConfigOverride(
       mapOf(
         "indent_size" to "2",
         "ktlint_standard_filename" to "disabled",
