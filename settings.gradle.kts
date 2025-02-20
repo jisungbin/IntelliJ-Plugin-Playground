@@ -18,6 +18,8 @@ dependencyResolutionManagement {
 
   repositories {
     mavenCentral()
+    maven("https://download.jetbrains.com/teamcity-repository/")
+    maven("https://packages.jetbrains.team/maven/p/grazi/grazie-platform-public/")
 
     intellijPlatform {
       defaultRepositories()

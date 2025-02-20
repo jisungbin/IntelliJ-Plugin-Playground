@@ -6,6 +6,7 @@
     <inspection_tool class="ExtensionClassShouldBeFinalAndNonPublic" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="IncorrectProcessCanceledExceptionHandling" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="JUnitMixedFramework" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="OverrideOnly" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="QodanaKotlinSanity" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
       <option name="processCode" value="true" />
@@ -13,6 +14,6 @@
       <option name="processComments" value="true" />
     </inspection_tool>
     <inspection_tool class="ThreadingConcurrency" enabled="true" level="ERROR" enabled_by_default="true" />
-    <inspection_tool class="UastHintedVisitorAdapterHints" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="UnstableApiUsage" enabled="false" level="WARNING" enabled_by_default="false" />
   </profile>
 </component>

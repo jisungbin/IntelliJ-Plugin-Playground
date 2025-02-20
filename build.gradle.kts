@@ -19,7 +19,7 @@ version = "0.0-preview"
 kotlin {
   explicitApi()
   jvmToolchain {
-    languageVersion = JavaLanguageVersion.of(17)
+    languageVersion = JavaLanguageVersion.of(21)
     vendor = JvmVendorSpec.JETBRAINS
   }
 }
@@ -90,10 +90,8 @@ spotless {
 
 dependencies {
   intellijPlatform {
-    // intellijIdeaCommunity("2023.3")
-    create("IC", "2024.2.1")
+    intellijIdeaCommunity("2024.3.3")
     bundledPlugins("com.intellij.java", "org.jetbrains.kotlin")
-
     testFramework(TestFrameworkType.Platform)
     testFramework(TestFrameworkType.Plugin.Java)
     testFramework(TestFrameworkType.JUnit5)
@@ -102,6 +100,5 @@ dependencies {
   testImplementation(kotlin("test-junit5"))
   testImplementation(kotlin("reflect")) // Used by assertk
   testImplementation("com.willowtreeapps.assertk:assertk:0.28.1")
-
-  testImplementation("junit:junit:4.13.2") { because("IJPL-159134") }
+  testImplementation("com.jetbrains.intellij.platform:test-framework:243.24978.46")
 }
