@@ -75,6 +75,7 @@ import org.junit.jupiter.api.BeforeAll
   }
 
   private companion object {
+    // TODO property delegation으로 변경하기: TestFixture<T>.get() 중복 호출 제거
     private val project = projectFixture(openAfterCreation = true)
     private val module = project.moduleFixture()
     private val sourceRoot = module.sourceRootFixture()
