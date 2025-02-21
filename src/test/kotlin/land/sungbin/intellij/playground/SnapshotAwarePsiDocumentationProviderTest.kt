@@ -31,9 +31,10 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.junit.jupiter.api.BeforeAll
 
+// TODO @RunInEdt
 @TestApplication class SnapshotAwarePsiDocumentationProviderTest {
   private val editor by ::file.asFixture().editorFixture()
-  private val expectedSnapshotRoot = tempDir.resolve(defaultModuleName).resolve("images")
+  private val expectedSnapshotRoot = tempDir.get().resolve(defaultModuleName).resolve("images")
 
   @Test fun test() {
     runBlocking {
@@ -142,11 +143,11 @@ import org.junit.jupiter.api.BeforeAll
   }
 
   private companion object {
-    private val tempDir by tempPathFixture()
-    private val project by projectFixture(::tempDir.asFixture(), defaultOpenProjectTask, openAfterCreation = true)
+    private val tempDir = tempPathFixture()
+    private val project by projectFixture(tempDir, defaultOpenProjectTask, openAfterCreation = true)
     private val module by ::project.asFixture().moduleFixture(defaultModuleName)
-    private val sourceRoot by ::module.asFixture().sourceRootFixture()
-    private val file by ::sourceRoot.asFixture().psiFileFixture("test-file.kt", "")
+    private val sourceRoot = ::module.asFixture().sourceRootFixture()
+    private val file by sourceRoot.psiFileFixture("test-file.kt", "")
 
     @BeforeAll
     @JvmStatic fun prepare() {
