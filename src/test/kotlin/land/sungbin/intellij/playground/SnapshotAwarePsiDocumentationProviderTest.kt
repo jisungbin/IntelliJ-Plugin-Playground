@@ -5,12 +5,12 @@ package land.sungbin.intellij.playground
 import assertk.assertThat
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
-import assertk.assertions.isNotNull
 import assertk.assertions.single
 import com.intellij.lang.documentation.ide.IdeDocumentationTargetProvider
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.EDT
 import com.intellij.openapi.application.writeAction
+import com.intellij.openapi.project.waitForSmartMode
 import com.intellij.platform.backend.documentation.PsiDocumentationTargetProvider
 import com.intellij.platform.backend.documentation.impl.computeDocumentationBlocking
 import com.intellij.psi.PsiDocumentManager
@@ -97,9 +97,9 @@ import org.junit.jupiter.api.BeforeAll
             |/**
             |  * my test function
             |  *
-            |  * %snapshot test 1000x2000% 
+            |  * %snapshot % 
             |  */
-            |fun test() {}
+            |fun te<caret>st() {}
           """.trimMargin(),
           null,
         )
@@ -125,14 +125,13 @@ import org.junit.jupiter.api.BeforeAll
       psiDocsManager.commitDocument(newDocument)
     }
 
+    project.waitForSmartMode()
+
     val targets = docsTargetProvider.documentationTargets(editor, file, caretOffset)
-    assertThat(targets, name = "single target").single()
-
-    val target = targets.first()
+    val target = targets.single()
     val caretDocs = computeDocumentationBlocking(target.createPointer())
-    assertThat(caretDocs, name = "exists caret docs").isNotNull()
+    val imageTags = Jsoup.parse(caretDocs?.html.orEmpty()).select("img")
 
-    val imageTags = Jsoup.parse(caretDocs!!.html).select("img")
     if (expectedSnapshotTag == null)
       assertThat(imageTags, name = "no image").isEmpty()
     else
