@@ -23,7 +23,7 @@ public class SnapshotAwareInlineDocumentationProvider : InlineDocumentationProvi
 private class SnapshotAwareInlineDocumentation(private val delegate: InlineDocumentation) : InlineDocumentation by delegate {
   override fun renderText(): String? {
     val html = delegate.renderText() ?: return null
-    val project = delegate.ownerTarget?.safeAs<NavigatablePsiElement>()?.project ?: return html
-    return html.handleSnapshotDocs(project)
+    val element = delegate.ownerTarget?.safeAs<NavigatablePsiElement>() ?: return html
+    return html.handleSnapshotDocs(element)
   }
 }

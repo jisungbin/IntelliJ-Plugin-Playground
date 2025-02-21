@@ -28,8 +28,7 @@ private class SnapshotAwareDocumentationTarget(
   override fun computeDocumentation(): DocumentationResult? {
     val documentation = delegate.computeDocumentation()
     val html = documentation.safeAs<DocumentationData>()?.html ?: return documentation
-    val snapshotAwareHtml = html.handleSnapshotDocs(element.project)
-    return DocumentationResult.documentation(snapshotAwareHtml)
+    return DocumentationResult.documentation(html.handleSnapshotDocs(element))
   }
 
   override fun createPointer(): Pointer<out DocumentationTarget> {
