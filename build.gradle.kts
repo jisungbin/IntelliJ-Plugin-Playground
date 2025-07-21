@@ -9,7 +9,7 @@ plugins {
   id("java")
   id("org.jetbrains.intellij.platform")
   kotlin("jvm") version "2.1.20-RC"
-  id("com.diffplug.spotless") version "7.0.2"
+  id("com.diffplug.spotless") version "7.2.1"
   idea
 }
 
